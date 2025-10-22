@@ -72,7 +72,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       )}
       <div
         className={cn(
-          'max-w-md lg:max-w-xl px-4 py-3 rounded-2xl relative prose prose-sm dark:prose-invert prose-p:m-0',
+          'max-w-md lg:max-w-xl px-4 py-3 rounded-2xl relative prose prose-sm dark:prose-invert prose-p:m-0 break-words overflow-wrap-anywhere',
           isUser
             ? 'bg-primary text-primary-foreground rounded-br-none'
             : 'bg-muted text-foreground rounded-bl-none'

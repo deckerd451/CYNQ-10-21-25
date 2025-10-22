@@ -12,6 +12,7 @@ import { useEcosystemStore } from '@/stores/ecosystemStore';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { SnapshotModal } from '@/components/snapshot/SnapshotModal';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 interface SidebarProps {
   sessions: SessionInfo[];
   activeSessionId: string | null;
@@ -149,24 +150,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <ScrollArea className="flex-1 -mx-2">
         <div className="px-2 space-y-1">
           {sessions.length > 0 ? (
-            sessions.map((session) => (
-              <NavItem key={session.id}>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start truncate relative"
-                  onClick={() => onSwitchSession(session.id)}
-                >
-                  <MessageSquare className="w-4 h-4 mr-2 flex-shrink-0" />
-                  <span className="truncate">{session.title}</span>
-                  {activeSessionId === session.id && isChatActive && (
-                    <motion.div
-                      layoutId="active-nav-indicator"
-                      className="absolute inset-0 bg-secondary rounded-lg -z-10"
-                    />
-                  )}
-                </Button>
-              </NavItem>
-            ))
+            <TooltipProvider delayDuration={300}>
+              {sessions.map((session) => (
+                <NavItem key={session.id}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start truncate relative"
+                        onClick={() => onSwitchSession(session.id)}
+                      >
+                        <MessageSquare className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">{session.title}</span>
+                        {activeSessionId === session.id && isChatActive && (
+                          <motion.div
+                            layoutId="active-nav-indicator"
+                            className="absolute inset-0 bg-secondary rounded-lg -z-10"
+                          />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs">
+                      <p>{session.title}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </NavItem>
+              ))}
+            </TooltipProvider>
           ) : (
             <div className="px-4 py-8 text-center">
               <p className="text-sm text-muted-foreground">
