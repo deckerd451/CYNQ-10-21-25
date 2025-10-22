@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 import type { Contact, KismetEvent, Community, Organization, Skill, Project, KnowledgeItem, Relationship, CriticalPath, CriticalPathTask } from '@/types/ecosystem';
 import { produce } from 'immer';
+import { supabaseEcosystemService } from '@/lib/supabaseClient';
 const commercializationCriticalPath: CriticalPath = {
   id: 'cp-commercialization-1',
   title: 'CRITICAL PATH TO COMMERCIALIZATION — CLASS II SURGICAL DEVICE (U.S. + EU)',
@@ -219,6 +220,7 @@ interface EcosystemState {
   disconnectCrunchbase: () => void;
   connectTwitter: () => void;
   disconnectTwitter: () => void;
+  syncFromSupabase: () => Promise<void>;
   clear: () => void;
 }
 const initialState = {
@@ -355,6 +357,27 @@ export const useEcosystemStore = create<EcosystemState>()(
       disconnectCrunchbase: () => set({ crunchbaseConnected: false }),
       connectTwitter: () => set({ twitterConnected: true }),
       disconnectTwitter: () => set({ twitterConnected: false }),
+      syncFromSupabase: async () => {
+        try {
+          const data = await supabaseEcosystemService.getAllEcosystemData();
+          set({
+            contacts: data.contacts,
+            events: data.events,
+            communities: data.communities,
+            organizations: data.organizations,
+            skills: data.skills,
+            projects: data.projects,
+            knowledge: data.knowledge,
+            relationships: data.relationships,
+            criticalPaths: data.criticalPaths.length > 0
+              ? data.criticalPaths
+              : [commercializationCriticalPath, digitalHealthCriticalPath],
+          });
+        } catch (error) {
+          console.error('Error syncing from Supabase:', error);
+          throw error;
+        }
+      },
       clear: () => set(initialState)
     }),
     {

@@ -109,6 +109,21 @@ export function EcosystemPage() {
       return () => clearTimeout(timer);
     }
   }, [highlightedNodes]);
+
+  // Load data from Supabase on component mount
+  useEffect(() => {
+    const loadSupabaseData = async () => {
+      try {
+        await store.syncFromSupabase();
+        console.log('Successfully loaded data from Supabase');
+      } catch (error) {
+        console.error('Failed to load data from Supabase:', error);
+        // Silently fail - user will see empty ecosystem or existing local data
+      }
+    };
+
+    loadSupabaseData();
+  }, []); // Empty dependency array - only run once on mount
   const rightColumnVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
