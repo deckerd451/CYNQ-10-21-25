@@ -407,9 +407,14 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 
 // ============================================================================
-// START SERVER
+// START SERVER (only when running locally, not on Vercel)
 // ============================================================================
 
-app.listen(PORT, () => {
-  console.log(`API server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`API server running on port ${PORT}`);
+  });
+}
+
+// Export for Vercel serverless
+export default app;

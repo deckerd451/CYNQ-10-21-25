@@ -35,7 +35,7 @@ export class SupabaseUserService {
     const userId = this.getUserId();
 
     // Get profile
-    const { data: profile, error: profileError } = await supabase
+    let { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('*')
       .eq('id', userId)

@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run build && npm run build:api",
+  "installCommand": "npm install --legacy-peer-deps",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api"
+    }
+  ]
+}

@@ -81,16 +81,21 @@ Once the application is running, you can:
 *   Manage your profile, ecosystem data, and relationships.
 *   Explore community intelligence and contribute your own insights.
 ## Deployment
-This project is designed for easy deployment to Cloudflare Pages.
-1.  **Build the application:**
-    ```sh
-    bun run build
-    ```
-2.  **Deploy to Cloudflare:**
-    The `deploy` script in `package.json` handles both the build and deployment process.
-    ```sh
-    bun run deploy
-    ```
-    Wrangler will guide you through the deployment process, publishing your application to your Cloudflare account.
-Alternatively, you can deploy directly from your GitHub repository with a single click.
+
+This project can be deployed to Vercel with zero configuration.
+
+**Quick Deploy to Vercel:**
+1. Sign in to [vercel.com](https://vercel.com) with GitHub
+2. Import your repository
+3. Add environment variables (see [DEPLOYMENT.md](./DEPLOYMENT.md))
+4. Click Deploy
+
+For detailed deployment instructions, see **[DEPLOYMENT.md](./DEPLOYMENT.md)**
+
+### Alternative: Cloudflare Pages
+This project was originally designed for Cloudflare Pages and can still be deployed there:
+```sh
+bun run build
+bun run deploy
+```
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/deckerd451/Kismet)

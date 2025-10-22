@@ -57,6 +57,7 @@
 		"@types/qrcode.react": "^1.0.5",
 		"@typescript-eslint/eslint-plugin": "^8.38.0",
 		"@typescript-eslint/parser": "^8.38.0",
+		"@yudiel/react-qr-scanner": "^2.4.0",
 		"agents": "^0.0.109",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
