@@ -30,7 +30,11 @@ package-lock.json
 # wrangler files
 .wrangler
 .dev.vars*
-.env.*
+.env
+.env.local
+.env.development
+.env.production
+.env.test
 
 data/
 .data/

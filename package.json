@@ -11,7 +11,8 @@
 		"build:api": "tsc -p tsconfig.api.json",
 		"lint": "eslint --cache -f json --quiet .",
 		"preview": "npm run build && vite preview --host 0.0.0.0 --port ${PORT:-4173}",
-		"start:api": "node dist/api/server.js"
+		"start:api": "node dist/api/server.js",
+		"db:check": "node scripts/check-database.js"
 	},
 	"dependencies": {
 		"@cloudflare/workers-types": "^4.20250807.0",
