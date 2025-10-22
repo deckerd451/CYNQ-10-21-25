@@ -56,67 +56,55 @@ const requiredTables = [
 
 async function checkDatabase() {
   try {
-    // Test connection by querying pg_catalog
     console.log('\n📊 Checking database tables...\n');
 
-    const { data, error } = await supabase
-      .rpc('check_table_exists', { table_name: 'user_profiles' })
-      .catch(async () => {
-        // Fallback: query information_schema
-        return await supabase
-          .from('information_schema.tables')
-          .select('table_name')
-          .eq('table_schema', 'public');
-      });
+    const results = [];
 
-    if (error) {
-      // Try alternative method
-      const results = [];
-      for (const table of requiredTables) {
-        try {
-          const { error: tableError } = await supabase
-            .from(table)
-            .select('id')
-            .limit(1);
+    // Check each table by attempting to query it
+    for (const table of requiredTables) {
+      try {
+        const { error: tableError } = await supabase
+          .from(table)
+          .select('id')
+          .limit(1);
 
-          if (!tableError) {
-            results.push({ table, exists: true });
-            console.log(`✅ ${table}`);
-          } else if (tableError.code === 'PGRST116' || tableError.message.includes('does not exist')) {
-            results.push({ table, exists: false });
-            console.log(`❌ ${table} - NOT FOUND`);
-          } else {
-            results.push({ table, exists: true, warning: tableError.message });
-            console.log(`⚠️  ${table} - EXISTS (warning: ${tableError.message})`);
-          }
-        } catch (err) {
+        if (!tableError) {
+          results.push({ table, exists: true });
+          console.log(`✅ ${table}`);
+        } else if (tableError.code === 'PGRST116' || tableError.message.includes('does not exist')) {
           results.push({ table, exists: false });
-          console.log(`❌ ${table} - ERROR: ${err.message}`);
+          console.log(`❌ ${table} - NOT FOUND`);
+        } else {
+          results.push({ table, exists: true, warning: tableError.message });
+          console.log(`⚠️  ${table} - EXISTS (warning: ${tableError.message})`);
         }
+      } catch (err) {
+        results.push({ table, exists: false });
+        console.log(`❌ ${table} - ERROR: ${err.message}`);
       }
+    }
 
-      const missingTables = results.filter(r => !r.exists);
+    const missingTables = results.filter(r => !r.exists);
 
-      console.log('\n📈 Summary:');
-      console.log(`   Total tables checked: ${requiredTables.length}`);
-      console.log(`   Found: ${results.filter(r => r.exists).length}`);
-      console.log(`   Missing: ${missingTables.length}`);
+    console.log('\n📈 Summary:');
+    console.log(`   Total tables checked: ${requiredTables.length}`);
+    console.log(`   Found: ${results.filter(r => r.exists).length}`);
+    console.log(`   Missing: ${missingTables.length}`);
 
-      if (missingTables.length > 0) {
-        console.log('\n⚠️  Missing tables detected!');
-        console.log('\n📝 Next steps:');
-        console.log('   1. Go to your Supabase dashboard: https://app.supabase.com');
-        console.log('   2. Navigate to SQL Editor');
-        console.log('   3. Copy and paste the contents of:');
-        console.log('      supabase/migrations/20251022000001_initial_schema.sql');
-        console.log('   4. Run the migration');
-        console.log('\n   Or use Supabase CLI: npx supabase db push');
-        process.exit(1);
-      } else {
-        console.log('\n✅ All tables exist! Database is ready.');
-        console.log('\n🚀 You can now run the application:');
-        console.log('   npm run dev:all');
-      }
+    if (missingTables.length > 0) {
+      console.log('\n⚠️  Missing tables detected!');
+      console.log('\n📝 Next steps:');
+      console.log('   1. Go to your Supabase dashboard: https://app.supabase.com');
+      console.log('   2. Navigate to SQL Editor');
+      console.log('   3. Copy and paste the contents of:');
+      console.log('      supabase/migrations/20251022000001_initial_schema.sql');
+      console.log('   4. Run the migration');
+      console.log('\n   Or use Supabase CLI: npx supabase db push');
+      process.exit(1);
+    } else {
+      console.log('\n✅ All tables exist! Database is ready.');
+      console.log('\n🚀 You can now run the application:');
+      console.log('   npm run dev:all');
     }
   } catch (err) {
     console.error('\n❌ Database connection failed:');
