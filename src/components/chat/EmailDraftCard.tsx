@@ -26,12 +26,12 @@ export const EmailDraftCard: React.FC<EmailDraftCardProps> = ({ to, subject, bod
       <CardContent className="text-sm">
         <div className="space-y-2">
           <div className="flex gap-2">
-            <span className="font-semibold text-muted-foreground">To:</span>
-            <span>{to}</span>
+            <span className="font-semibold text-muted-foreground flex-shrink-0">To:</span>
+            <span className="break-words overflow-wrap-anywhere">{to}</span>
           </div>
           <div className="flex gap-2">
-            <span className="font-semibold text-muted-foreground">Subject:</span>
-            <span>{subject}</span>
+            <span className="font-semibold text-muted-foreground flex-shrink-0">Subject:</span>
+            <span className="break-words overflow-wrap-anywhere">{subject}</span>
           </div>
         </div>
         <Separator className="my-3" />

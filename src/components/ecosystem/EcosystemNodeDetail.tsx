@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, Target, Sparkles, Users, Calendar, Building, BrainCircuit, GitBranch, Library, Link as LinkIcon, Mail, Flag, Clock } from 'lucide-react';
 import type { NodeType, Contact, Goal } from '@/types/ecosystem';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 interface EcosystemNodeDetailProps {
   nodeType: NodeType;
 }
@@ -68,37 +69,62 @@ export const EcosystemNodeDetail: React.FC<EcosystemNodeDetailProps> = ({ nodeTy
       case 'knowledge': {
         return (
           <DetailSection title="Key Knowledge" icon={<Library className="w-4 h-4" />} isEmpty={knowledge.length === 0}>
-            <div className="space-y-2">
-              {knowledge.map(item => (
-                <div key={item.id} className="flex items-center justify-between text-sm">
-                  <span className="truncate">{item.name}</span>
-                  {item.url && (
-                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="ml-2 text-primary hover:underline flex-shrink-0">
-                      <LinkIcon className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
+            <TooltipProvider delayDuration={300}>
+              <div className="space-y-2">
+                {knowledge.map(item => (
+                  <div key={item.id} className="flex items-center justify-between text-sm">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="truncate cursor-default">{item.name}</span>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <p>{item.name}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    {item.url && (
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="ml-2 text-primary hover:underline flex-shrink-0">
+                        <LinkIcon className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </TooltipProvider>
           </DetailSection>
         );
       }
       case 'contacts': {
         return (
           <DetailSection title="Key Contacts" icon={<Users className="w-4 h-4" />} isEmpty={contacts.length === 0}>
-            <div className="space-y-2">
-              {contacts.map((contact: Contact) => (
-                <div key={contact.id} className="flex flex-col text-sm">
-                  <span className="font-medium truncate">{contact.name}</span>
-                  {contact.email && (
-                    <a href={`mailto:${contact.email}`} className="flex items-center gap-1 text-xs text-primary hover:underline truncate">
-                      <Mail className="w-3 h-3" />
-                      <span className="truncate">{contact.email}</span>
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
+            <TooltipProvider delayDuration={300}>
+              <div className="space-y-2">
+                {contacts.map((contact: Contact) => (
+                  <div key={contact.id} className="flex flex-col text-sm">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="font-medium truncate cursor-default">{contact.name}</span>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <p>{contact.name}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    {contact.email && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <a href={`mailto:${contact.email}`} className="flex items-center gap-1 text-xs text-primary hover:underline truncate">
+                            <Mail className="w-3 h-3 flex-shrink-0" />
+                            <span className="truncate">{contact.email}</span>
+                          </a>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="max-w-xs">
+                          <p>{contact.email}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </TooltipProvider>
           </DetailSection>
         );
       }
